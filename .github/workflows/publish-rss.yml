@@ -60,6 +60,9 @@ jobs:
           cd pages
           HAS_CHANGES=$(git diff)
           if [ -n "$HAS_CHANGES" ]; then
+            echo 'Committing changes to gh-pages...'
+            git diff
+
             git config user.name 'GH Actions Bot'
             git config user.email 'actions.bot@example.com'
 
