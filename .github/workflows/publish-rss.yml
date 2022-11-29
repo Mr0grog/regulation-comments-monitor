@@ -17,11 +17,15 @@ jobs:
         with:
           path: main
 
+      - name: Install poetry
+        run: pipx install poetry
+
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'poetry'
+          cache-dependency-path: 'main/pyproject.toml'
 
       - name: Install dependencies
         run: |
