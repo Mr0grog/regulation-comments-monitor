@@ -60,10 +60,11 @@ jobs:
         run: |
           cp -R main/out/* pages/
           cd pages
-          HAS_CHANGES=$(git diff)
+          git add .
+          HAS_CHANGES=$(git status --short)
           if [ -n "$HAS_CHANGES" ]; then
             echo 'Committing changes to gh-pages...'
-            git diff
+            git status --short
 
             if [ -n "$COMMIT" ]; then
               exit 0
