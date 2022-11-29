@@ -71,7 +71,7 @@ jobs:
           fi
 
       - name: Commit Build to gh-pages
-        if: steps.detect-changes.outputs.HAS_CHANGES == 'true'
+        if: github.ref == 'refs/heads/main' && steps.detect-changes.outputs.HAS_CHANGES == 'true'
         run: |
           cd pages
           echo 'Committing changes to gh-pages...'
