@@ -44,6 +44,8 @@ jobs:
         run: |
           cd main
           poetry run python docket-comments.py 'EPA-HQ-OAR-2021-0668' 'EPA-HQ-OPPT-2020-0493'
+          ls -lah .
+          ls -lah out
 
       # Actually publish it to github pages -----------------------------------
 
@@ -72,4 +74,6 @@ jobs:
               # git commit -m 'Update gh-pages RSS feeds from main branch'
               # git push
             fi
+          else
+            echo 'Nothing new to commit!'
           fi
