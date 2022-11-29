@@ -75,10 +75,9 @@ jobs:
         run: |
           cd pages
           echo 'Committing changes to gh-pages...'
-          exit 0
-          # git config user.name 'GH Actions Bot'
-          # git config user.email 'actions.bot@example.com'
 
-          # git add .
-          # git commit -m 'Update gh-pages RSS feeds from main branch'
-          # git push
+          git config user.name 'GH Actions Bot'
+          git config user.email 'actions.bot@example.com'
+
+          git commit -m 'Update gh-pages RSS feeds from main branch'
+          git push
