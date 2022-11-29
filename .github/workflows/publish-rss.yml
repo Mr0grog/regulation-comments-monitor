@@ -33,7 +33,7 @@ jobs:
           REGULATIONS_GOV_API_KEY: ${{ secrets.REGULATIONS_GOV_API_KEY }}
         run: |
           cd main
-          poetry run python docket-comments.py
+          poetry run python docket-comments.py 'EPA-HQ-OAR-2021-0668' 'EPA-HQ-OPPT-2020-0493'
 
       # Actually publish it to github pages -----------------------------------
 
