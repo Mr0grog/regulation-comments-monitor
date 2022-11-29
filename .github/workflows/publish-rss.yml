@@ -1,0 +1,59 @@
+name: Publish RSS
+
+on:
+  # Run at 6am and 6pm ET every day.
+  schedule:
+    - cron: 15 11,23 * * *
+  # Or on demand in the GitHub UI.
+  workflow_dispatch: {}
+  # And on pull requests (but it won't actuall publish unless it's on `main`).
+  pull_request: {}
+
+jobs:
+  publish_rss:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: main
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: |
+          cd main
+          poetry install
+
+      - name: Create RSS Files
+        env:
+          REGULATIONS_GOV_API_KEY: ${{ secrets.REGULATIONS_GOV_API_KEY }}
+        run: |
+          cd main
+          poetry run python docket-comments.py
+
+      # Actually publish it to github pages -----------------------------------
+
+      - uses: actions/checkout@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          ref: gh-pages
+          path: pages
+
+      - name: Commit Build to gh-pages
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cp -R main/out/* pages/
+          cd pages
+          HAS_CHANGES=$(git diff)
+          if [ -n "$HAS_CHANGES" ]; then
+            git config user.name 'GH Actions Bot'
+            git config user.email 'actions.bot@example.com'
+
+            git add .
+            git commit -m 'Update gh-pages RSS feeds from main branch'
+            git push
+          fi

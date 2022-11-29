@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "regulation-comments-monitor"
+version = "0.1.0"
+description = ""
+authors = ["Rob Brackett <rob@robbrackett.com>"]
+readme = "README.md"
+packages = [{include = "regulation_comments_monitor"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+httpx = "^0.23.1"
+lxml = "^4.9.1"
+python-dateutil = "^2.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
