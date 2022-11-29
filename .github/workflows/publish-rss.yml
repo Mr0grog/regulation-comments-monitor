@@ -54,27 +54,31 @@ jobs:
           ref: gh-pages
           path: pages
 
-      - name: Commit Build to gh-pages
-        env:
-          COMMIT: ${{ github.ref == 'refs/heads/main' && 'true' || '' }}
+      - name: Detect Changes
+        id: detect-changes
         run: |
           cp -R main/out/* pages/
           cd pages
           git add .
           HAS_CHANGES=$(git status --short)
           if [ -n "$HAS_CHANGES" ]; then
-            echo 'Committing changes to gh-pages...'
+            echo 'Changes to commit:'
             git status --short
-
-            if [ -n "$COMMIT" ]; then
-              exit 0
-              # git config user.name 'GH Actions Bot'
-              # git config user.email 'actions.bot@example.com'
-
-              # git add .
-              # git commit -m 'Update gh-pages RSS feeds from main branch'
-              # git push
-            fi
+            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
           else
-            echo 'Nothing new to commit!'
+            echo 'No changes.'
+            echo "HAS_CHANGES=" >> $GITHUB_OUTPUT
           fi
+
+      - name: Commit Build to gh-pages
+        if: steps.detect-changes.outputs.HAS_CHANGES == 'true'
+        run: |
+          cd pages
+          echo 'Committing changes to gh-pages...'
+          exit 0
+          # git config user.name 'GH Actions Bot'
+          # git config user.email 'actions.bot@example.com'
+
+          # git add .
+          # git commit -m 'Update gh-pages RSS feeds from main branch'
+          # git push
