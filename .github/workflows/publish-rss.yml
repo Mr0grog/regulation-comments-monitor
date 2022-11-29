@@ -25,7 +25,8 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'poetry'
-          cache-dependency-path: 'main/pyproject.toml'
+          path: main
+          # cache-dependency-path: 'main/pyproject.toml'
 
       - name: Install dependencies
         run: |
