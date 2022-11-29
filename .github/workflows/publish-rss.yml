@@ -24,8 +24,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          cache: 'poetry'
-          cache-dependency-path: 'main/pyproject.toml'
+
+      # Ideally we'd use the built-in caching support from actions/setup-python,
+      # but it doesn't work when not installing the root directory. Sigh.
+      # See: https://github.com/actions/setup-python/issues/476
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: hashFiles('main/poetry.lock')
 
       - name: Install dependencies
         run: |
@@ -38,26 +44,40 @@ jobs:
         run: |
           cd main
           poetry run python docket-comments.py 'EPA-HQ-OAR-2021-0668' 'EPA-HQ-OPPT-2020-0493'
+          ls -lah .
+          ls -lah out
 
       # Actually publish it to github pages -----------------------------------
 
       - uses: actions/checkout@v3
-        if: github.ref == 'refs/heads/main'
         with:
           ref: gh-pages
           path: pages
 
-      - name: Commit Build to gh-pages
-        if: github.ref == 'refs/heads/main'
+      - name: Detect Changes
+        id: detect-changes
         run: |
           cp -R main/out/* pages/
           cd pages
-          HAS_CHANGES=$(git diff)
+          git add .
+          HAS_CHANGES=$(git status --short)
           if [ -n "$HAS_CHANGES" ]; then
-            git config user.name 'GH Actions Bot'
-            git config user.email 'actions.bot@example.com'
-
-            git add .
-            git commit -m 'Update gh-pages RSS feeds from main branch'
-            git push
+            echo 'Changes to commit:'
+            git status --short
+            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+          else
+            echo 'No changes.'
+            echo "HAS_CHANGES=" >> $GITHUB_OUTPUT
           fi
+
+      - name: Commit Build to gh-pages
+        if: github.ref == 'refs/heads/main' && steps.detect-changes.outputs.HAS_CHANGES == 'true'
+        run: |
+          cd pages
+          echo 'Committing changes to gh-pages...'
+
+          git config user.name 'GH Actions Bot'
+          git config user.email 'actions.bot@example.com'
+
+          git commit -m 'Update gh-pages RSS feeds from main branch'
+          git push
