@@ -13,9 +13,16 @@ jobs:
   publish_rss:
     runs-on: ubuntu-latest
     steps:
+      # Check out the source in `main/` and the gh-pages branch where we publish
+      # output in `pages/`.
       - uses: actions/checkout@v3
         with:
           path: main
+
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: pages
 
       - name: Install poetry
         run: pipx install poetry
@@ -24,14 +31,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
-      # Ideally we'd use the built-in caching support from actions/setup-python,
-      # but it doesn't work when not installing the root directory. Sigh.
-      # See: https://github.com/actions/setup-python/issues/476
-      - uses: actions/cache@v3
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: hashFiles('main/poetry.lock')
+          cache: 'poetry'
 
       - name: Install dependencies
         run: |
@@ -48,11 +48,6 @@ jobs:
           ls -lah out
 
       # Actually publish it to github pages -----------------------------------
-
-      - uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-          path: pages
 
       - name: Detect Changes
         id: detect-changes
