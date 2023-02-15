@@ -42,7 +42,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd main
-          poetry install
+          python3 -m poetry install
 
       - name: Create RSS Files
         env:
