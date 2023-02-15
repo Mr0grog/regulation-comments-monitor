@@ -2,6 +2,7 @@ runners:
   - name: "aws-runner"
     cloud: "aws"
     instance_type: "t3.nano"
+    region: "us-west-2"
     machine_image: "ami-06fd8a495a537da8b"
     preemptible: true
     labels:
