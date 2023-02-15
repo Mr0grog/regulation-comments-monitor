@@ -1,4 +1,4 @@
-name: Publish RSS
+name: 'Test CIRun.io'
 
 on:
   # Run frequently!
