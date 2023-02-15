@@ -6,8 +6,6 @@ on:
     - cron: '*/5 * * * *'
   # Or on demand in the GitHub UI.
   workflow_dispatch: {}
-  # And on pull requests (but it won't actuall publish unless it's on `main`).
-  pull_request: {}
 
 jobs:
   build_rss:
