@@ -1,0 +1,63 @@
+name: Publish RSS
+
+on:
+  # Run frequently!
+  schedule:
+    - cron: '*/5 * * * *'
+  # Or on demand in the GitHub UI.
+  workflow_dispatch: {}
+  # And on pull requests (but it won't actuall publish unless it's on `main`).
+  pull_request: {}
+
+jobs:
+  build_rss:
+    runs-on: [self-hosted, cirun-runner]
+    steps:
+      # Check out the source in `main/` and the gh-pages branch where we publish
+      # output in `pages/`.
+      - uses: actions/checkout@v3
+        with:
+          path: main
+
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: pages
+
+      - name: Install poetry
+        run: pipx install poetry
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: |
+          cd main
+          poetry install
+
+      - name: Create RSS Files
+        env:
+          REGULATIONS_GOV_API_KEY: ${{ secrets.REGULATIONS_GOV_API_KEY }}
+        run: |
+          cd main
+          poetry run python docket-comments.py 'EPA-HQ-OAR-2021-0668' 'EPA-HQ-OPPT-2020-0493'
+          ls -lah .
+          ls -lah out
+
+      - name: Detect Changes
+        id: detect-changes
+        run: |
+          cp -R main/out/* pages/
+          cd pages
+          HAS_CHANGES=$(git status --short)
+          if [ -n "$HAS_CHANGES" ]; then
+            echo 'Changes to commit:'
+            git status --short
+            echo "HAS_CHANGES=true" >> $GITHUB_OUTPUT
+          else
+            echo 'No changes.'
+            echo "HAS_CHANGES=" >> $GITHUB_OUTPUT
+          fi
