@@ -31,7 +31,7 @@ jobs:
           path: pages
 
       - name: Install poetry
-        run: python 3 -m pipx install poetry
+        run: python3 -m pipx install poetry
 
       - name: Install Python
         uses: actions/setup-python@v4
