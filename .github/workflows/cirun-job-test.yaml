@@ -15,7 +15,7 @@ jobs:
         run: |
           # cirun.io images don't have all the builtins GH-hosted runners do
           sudo apt-get update
-          sudo apt-get install -y pyenv pipx
+          sudo apt-get install -y pipx
 
       # Check out the source in `main/` and the gh-pages branch where we publish
       # output in `pages/`.
