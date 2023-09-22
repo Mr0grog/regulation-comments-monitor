@@ -8,7 +8,7 @@ packages = [{include = "regulation_comments_monitor"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-httpx = "^0.23.1"
+httpx = "^0.25.0"
 lxml = "^4.9.3"
 python-dateutil = "^2.8.2"
 
