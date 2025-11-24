@@ -15,11 +15,11 @@ jobs:
     steps:
       # Check out the source in `main/` and the gh-pages branch where we publish
       # output in `pages/`.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           path: main
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: gh-pages
           path: pages
