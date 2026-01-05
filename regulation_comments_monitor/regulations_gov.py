@@ -28,14 +28,14 @@ class RegulationsGovApi:
         self.base_url = base_url
         self.api_key = api_key
 
-    def get_json(self, path, headers=None, **kwargs):
+    def get_json(self, path, headers=None, timeout=30, **kwargs):
         url = urljoin(self.base_url, path)
 
         if not headers:
             headers = {}
         headers['X-Api-Key'] = self.api_key
 
-        response = httpx.get(url, headers=headers, **kwargs)
+        response = httpx.get(url, headers=headers, timeout=timeout, **kwargs)
         data = response.json()
         if 'errors' in data:
             raise ApiError(', '.join(f'(Status {e["status"]}) {e["title"]}'
