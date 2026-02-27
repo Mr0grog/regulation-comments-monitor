@@ -1,5 +1,7 @@
 # Regulation Public Comments Monitor
 
+⚠️ **This project is no longer maintained!** Please feel free to use the code here for reference, but we are no longer actively monitoring all the [public] comments on specific rules.
+
 This is a quick and simple example of using the regulations.gov API to create an RSS feed of public comments on various dockets (e.g. https://www.regulations.gov/docket/EPA-HQ-OPPT-2020-0493). It’s a pretty simple Python script that runs on a schedule using GitHub Actions, and outputs a set of RSS feeds (one for each docket it monitors).
 
 You can check the live RSS feeds for two dockets we are currently monitoring:
